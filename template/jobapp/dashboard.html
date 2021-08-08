@@ -11,7 +11,7 @@
                 <h1 class="text-white font-weight-bold">Dashboard</h1>
                 <div class="custom-breadcrumbs">
                     <a href="{% url 'jobapp:home' %}">Home</a> <span class="mx-2 slash">/</span>
-                    <a href="{% url 'jobapp:job-list' %}">Job</a> <span class="mx-2 slash">/</span>
+                    <a href="{% url 'jobapp:job-list' %}">Task</a> <span class="mx-2 slash">/</span>
                     <span class="text-white"><strong>Dashboard</strong></span>
                 </div>
             </div>
@@ -27,16 +27,16 @@
 
                 <div class="card">
                     {% if user.role == "employer" %}
-                    <h5 class="card-header text-center">My All Job</h5>
+                    <h5 class="card-header text-center">All My Tasks</h5>
                     {% if jobs %}
                     <table class="table text-center mt-5">
                         <thead class="thead-dark">
                             <tr>
-                                <th>Job Title</th>
+                                <th>Task Title</th>
                                 <th>Posted Date</th>
                                 <th>Date expiring</th>
                                 <th>Status</th>
-                                <th>Applicants</th>
+                                <th>Freelancers [Applied]</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -72,11 +72,11 @@
                                             {% if is_applicant > 1 %}
 
 
-                                            {% get_total_applicant total_applicants job %} Applicants
+                                            {% get_total_applicant total_applicants job %} Freelancers
 
                                             {% else %}
 
-                                            {% get_total_applicant total_applicants job %} Applicant
+                                            {% get_total_applicant total_applicants job %} Freelancer
 
                                             {% endif %}
 
@@ -92,41 +92,41 @@
                                     {% if job.is_published == True %}
                                         {% if job.is_closed == False %}
                                         <span id="change_job_status_{{ job.id }}">
-                                            <button onclick="call_sw_alert_func('{% url 'jobapp:complete' job.id %}','{{ job.id }}', 'Once Clicked, Your Post Will Marked Completed')" class="text-white btn btn-success btn-sm" >Make Close</button>
+                                            <button onclick="call_sw_alert_func('{% url 'jobapp:complete' job.id %}','{{ job.id }}', 'Once Clicked, Your Task Will Be Marked As Completed')" class="text-white btn btn-success btn-sm" >Close Task</button>
                                         </span>
                                         {% else %}
                                         <a class="text-white btn btn-success btn-sm" 
                                         role="button">Closed</a>                                    
                                         {% endif %}
                                         {% endif %}
-                                    <button onclick="call_sw_alert_func('{% url 'jobapp:delete' job.id %}','{{ job.id }}','Once Deleted, You Will Not be Able To Recover This Post!')" class="btn btn-danger btn-sm">Delete</button>
+                                    <button onclick="call_sw_alert_func('{% url 'jobapp:delete' job.id %}','{{ job.id }}','Once Deleted, You Will Not be Able To Recover This Task!')" class="btn btn-danger btn-sm">Delete Task</button>
                                     </td>
                             </tr>
                             {% endfor %}
                         </tbody>
                     </table>
                     {% else %}
-                    <p class="m-5">You have not any job yet !! <a href="{% url 'jobapp:create-job' %}">Create a new one.</a></p>
+                    <p class="m-5">You do not have any task created yet !! <a href="{% url 'jobapp:create-job' %}">Create a new one.</a></p>
                     {% endif %}
                     {% elif user.role == "employee" %}
 
 
                     <ul class="mb-3 nav nav-tabs" id="myTab" role="tablist">
                         <li class="nav-item">
-                            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Bookmarked Job</a>
+                            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Bookmarked Tasks</a>
                           </li>
                           <li class="nav-item">
-                            <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Aplied Job</a>
+                            <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Tasks You've Applied For</a>
                         </li>
                       </ul>
                       <div class="tab-content" id="myTabContent">
                         <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-                            <h5 class="card-header text-center">Bookmarked Posts</h5>
+                            <h5 class="card-header text-center">Bookmarked Tasks</h5>
                             {% if savedjobs %}
                             <table class="table text-center mt-5">
                                 <thead class="thead-dark">
                                     <tr>
-                                        <th>Job Title</th>
+                                        <th>Task Title</th>
                                         <th>Posted Date</th>
                                         <th>Date expiring</th>
                                         <th>Actions</th>
@@ -139,18 +139,18 @@
                                         <td>{{ job.timestamp | date:'M d, Y'  }}</td>
                                         <td>{{ job.job.last_date | date:'M d, Y' }}</td>
                                         <td>
-                                            <button onclick="call_sw_alert_func('{% url 'jobapp:delete-bookmark' job.id %}','{{ job.id }}','Once Deleted, This Post Will Remove From Your Favourite List!')" class="btn btn-danger btn-sm">Delete</button>
+                                            <button onclick="call_sw_alert_func('{% url 'jobapp:delete-bookmark' job.id %}','{{ job.id }}','Once Deleted, This Task Will Be Removed From Your Favourites List!')" class="btn btn-danger btn-sm">Delete</button>
                                         </td>
                                     </tr>
                                     {% endfor %}
                                 </tbody>
                             </table>
                             {% else %}
-                            <p class="m-5">You have not any save job yet !! </p>
+                            <p class="m-5">You do not have any saved tasks yet !! </p>
                             {% endif %}
                         </div>
                         <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-                            <h5 class="card-header text-center">Aplied Posts</h5>
+                            <h5 class="card-header text-center">Tasks You've Applied For</h5>
                             {% if appliedjobs %}
                             <table class="table text-center mt-5">
                                 <thead class="thead-dark">
@@ -171,7 +171,7 @@
                                 </tbody>
                             </table>
                             {% else %}
-                            <p class="m-5">You have not any applied job yet !! </p>
+                            <p class="m-5">You have not applied for any tasks yet!!! </p>
                             {% endif %}
                         </div>
                         

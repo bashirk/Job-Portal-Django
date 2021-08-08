@@ -268,4 +268,6 @@ jQuery(function($) {
 $('.appointment_date').datepicker({
 	'format': 'yyyy-m-d',
 	'autoclose': true
-  });
+	});
+
+

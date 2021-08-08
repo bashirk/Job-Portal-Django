@@ -14,7 +14,7 @@
         <h1 class="text-white font-weight-bold">{{ job.title }}</h1>
         <div class="custom-breadcrumbs">
           <a href="{% url 'jobapp:home' %}">Home</a> <span class="mx-2 slash">/</span>
-          <a href="{% url 'jobapp:job-list' %}">Job</a> <span class="mx-2 slash">/</span>
+          <a href="{% url 'jobapp:job-list' %}">Task</a> <span class="mx-2 slash">/</span>
           <span class="text-white"><strong>{{ job.title }}</strong></span>
         </div>
       </div>
@@ -42,11 +42,11 @@
                 <span class="text-primary">
 
                   {% if job.job_type == '1' %}
-                  Full Time
+                  Expert
                   {% elif job.job_type == '2'%}
-                  Part Time
+                  Intermediate
                   {% else  %}
-                  Internship
+                  Beginner
                   {% endif %}
                 </span>
               </span>
@@ -67,14 +67,14 @@
             <form action="{% url 'jobapp:bookmark-job' job.id %}" method="POST">
               {% csrf_token %}
               <input type="hidden" name="job" value="{{ job.id }}">
-              <input type="submit" class="btn btn-block btn-light btn-md" value="Save Job" />
+              <input type="submit" class="btn btn-block btn-light btn-md" value="Save Task" />
 
             </form>
 
             {% endif %}
             
             {% elif user.role == 'employer' %}
-            <button onclick="call_sw_alert_func('{% url 'jobapp:delete' job.id %}','{{ job.id }}','Once Deleted, You Will Not be Able To Recover This Post!')" class="btn btn-block btn-danger btn-md">Delete</button>
+            <button onclick="call_sw_alert_func('{% url 'jobapp:delete' job.id %}','{{ job.id }}','Once Deleted, You Will Not be Able To Recover This Task!')" class="btn btn-block btn-danger btn-md">Delete</button>
                                    
             {% else %}
 
@@ -126,7 +126,7 @@
       <div class="col-lg-8">
         <div class="mb-5">
           <!-- <figure class="mb-5"><img src="images/job_single_img_1.jpg" alt="Image" class="img-fluid rounded"></figure> -->
-          <h3 class="h5 d-flex align-items-center mb-4 text-primary"><span class="icon-align-left mr-3"></span>Job
+          <h3 class="h5 d-flex align-items-center mb-4 text-primary"><span class="icon-align-left mr-3"></span>Task
             Description</h3>
           {{ job.description | safe }}
         </div>
@@ -139,7 +139,7 @@
             {% if is_saved %}
             <span class="btn btn-block btn-light btn-md"><span class="icon-heart-o mr-2 text-danger"></span>Already
               Saved
-              Job</span>
+              Task</span>
             {% else %}
 
             <form action="{% url 'jobapp:bookmark-job' job.id %}" method="POST">
@@ -152,7 +152,7 @@
             {% endif %}
 
             {% elif user.role == 'employer' %}
-            <button onclick="call_sw_alert_func('{% url 'jobapp:delete' job.id %}','{{ job.id }}','Once Deleted, You Will Not be Able To Recover This Post!')" class="btn btn-block btn-danger btn-md">Delete</button>
+            <button onclick="call_sw_alert_func('{% url 'jobapp:delete' job.id %}','{{ job.id }}','Once Deleted, You Will Not be Able To Recover This Task!')" class="btn btn-block btn-danger btn-md">Delete</button>
                                    
             {% else %}
 
@@ -204,21 +204,21 @@
       </div>
       <div class="col-lg-4">
         <div class="bg-light p-3 border rounded mb-4">
-          <h3 class="text-primary  mt-3 h5 pl-3 mb-3 ">Job Summary</h3>
+          <h3 class="text-primary  mt-3 h5 pl-3 mb-3 ">Task Summary</h3>
           <ul class="list-unstyled pl-3 mb-0">
             <li class="mb-2"><strong class="text-black">Published on:</strong> {{ job.timestamp|date:"d M Y" }}</li>
-            <li class="mb-2"><strong class="text-black">Employment Status:</strong>
+            <li class="mb-2"><strong class="text-black">Skill Level:</strong>
               {% if job.job_type == '1' %}
-              Full Time
+              Expert
               {% elif job.job_type == '2'%}
-              Part Time
+              Intermediate
               {% else  %}
-              Internship
+              Beginner
               {% endif %}
             </li>
-            <li class="mb-2"><strong class="text-black">Job Location:</strong> {{ job.location }}</li>
-            <li class="mb-2"><strong class="text-black">Salary:</strong> {{ job.salary }}</li>
-            <li class="mb-2"><strong class="text-black">Application Deadline:</strong> {{ job.last_date|date:"d M Y" }}
+            <li class="mb-2"><strong class="text-black">Task Location:</strong> {{ job.location }}</li>
+            <li class="mb-2"><strong class="text-black">Amount (NGN):</strong> {{ job.salary }}</li>
+            <li class="mb-2"><strong class="text-black">Task Deadline:</strong> {{ job.last_date|date:"d M Y" }}
             </li>
           </ul>
         </div>
@@ -244,7 +244,7 @@
 
     <div class="row mb-5 justify-content-center">
       <div class="col-md-7 text-center">
-        <h2 class="section-title mb-2">{{ total }} Related Jobs</h2>
+        <h2 class="section-title mb-2">{{ total }} Related Tasks</h2>
       </div>
     </div>
 
@@ -267,11 +267,11 @@
           <div class="job-listing-meta">
             <span class="badge badge-danger">
               {% if job.job_type == '1' %}
-              Full Time
+              Expert
               {% elif job.job_type == '2'%}
-              Part Time
+              Intermediate
               {% else  %}
-              Internship
+              Beginner
               {% endif %}
             </span>
           </div>

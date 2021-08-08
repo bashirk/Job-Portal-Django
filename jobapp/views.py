@@ -6,13 +6,17 @@ from django.db.models import Q
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
 from django.http import Http404, HttpResponseRedirect, JsonResponse
+from django.core import serializers
 from django.core.serializers import serialize
 
+from django.conf import settings
 
 from account.models import User
 from jobapp.forms import *
 from jobapp.models import *
 from jobapp.permission import *
+
+
 User = get_user_model()
 
 
@@ -62,6 +66,42 @@ def home_view(request):
     return render(request, 'jobapp/index.html', context)
 
 
+# Pypaystack CustomerInfo for payment
+@login_required(login_url=reverse_lazy('account:login'))
+@user_is_employer
+def customer_info(request, id):
+
+    applicant = get_object_or_404(User, id=id)
+    key = settings.PAYSTACK_PUBLIC_KEY
+
+    taskowner = User.objects.filter(is_active=True, 
+                role='employer', 
+                id=request.user.id)
+        
+
+    if request.method == 'POST':
+        customer_form = CustomerInfoForm(request.method)
+        if customer_form.is_valid() and customer_form.cleaned_data:
+            customer_form.save()
+            context = {
+                'taskowner': taskowner,
+                #'email':customer_form.email
+            }
+            return render(request, 'jobapp/dashboard.html', context)
+        else:
+            return HttpResponse('Invalid input try again!!!')
+    else:
+        customer_form = CustomerInfoForm()
+        context = {
+            #'customer_form': customer_form,
+            'taskowner': taskowner,
+            'applicant': applicant,
+            'key': key,
+            #'email': email
+        }
+    return render(request, 'jobapp/customer_info.html', context)
+
+
 def job_list_View(request):
     """
 
@@ -100,7 +140,7 @@ def create_job_View(request):
             # for save tags
             form.save_m2m()
             messages.success(
-                    request, 'You are successfully posted your job! Please wait for review.')
+                    request, 'You have successfully posted your task! Please await a review from the admin.')
             return redirect(reverse("jobapp:single-job", kwargs={
                                     'id': instance.id
                                     }))
@@ -204,7 +244,7 @@ def apply_job_view(request, id):
                 instance.save()
 
                 messages.success(
-                    request, 'You have successfully applied for this job!')
+                    request, 'You have successfully submitted your profile for this task!')
                 return redirect(reverse("jobapp:single-job", kwargs={
                     'id': id
                 }))
@@ -216,7 +256,7 @@ def apply_job_view(request, id):
 
     else:
 
-        messages.error(request, 'You already applied for the Job!')
+        messages.error(request, 'You already submitted your profile for the task!')
 
         return redirect(reverse("jobapp:single-job", kwargs={
             'id': id
@@ -261,7 +301,7 @@ def delete_job_view(request, id):
     if job:
 
         job.delete()
-        messages.success(request, 'Your Job Post was successfully deleted!')
+        messages.success(request, 'Your Task was successfully deleted!')
 
     return redirect('jobapp:dashboard')
 
@@ -275,9 +315,9 @@ def make_complete_job_view(request, id):
         try:
             job.is_closed = True
             job.save()
-            messages.success(request, 'Your Job was marked closed!')
+            messages.success(request, 'Your task has now been marked as closed!')
         except:
-            messages.success(request, 'Something went wrong !')
+            messages.success(request, 'Sorry, something went wrong !')
             
     return redirect('jobapp:dashboard')
 
@@ -306,7 +346,7 @@ def delete_bookmark_view(request, id):
     if job:
 
         job.delete()
-        messages.success(request, 'Saved Job was successfully deleted!')
+        messages.success(request, 'Saved task was successfully deleted!')
 
     return redirect('jobapp:dashboard')
 
@@ -343,7 +383,7 @@ def job_bookmark_view(request, id):
                 instance.save()
 
                 messages.success(
-                    request, 'You have successfully save this job!')
+                    request, 'You have successfully saved this task!')
                 return redirect(reverse("jobapp:single-job", kwargs={
                     'id': id
                 }))
@@ -354,7 +394,7 @@ def job_bookmark_view(request, id):
             }))
 
     else:
-        messages.error(request, 'You already saved this Job!')
+        messages.error(request, 'You already saved this task!')
 
         return redirect(reverse("jobapp:single-job", kwargs={
             'id': id
@@ -377,7 +417,7 @@ def job_edit_view(request, id=id):
         instance.save()
         # for save tags
         # form.save_m2m()
-        messages.success(request, 'Your Job Post Was Successfully Updated!')
+        messages.success(request, 'Your task Was Successfully Updated!')
         return redirect(reverse("jobapp:single-job", kwargs={
             'id': instance.id
         }))

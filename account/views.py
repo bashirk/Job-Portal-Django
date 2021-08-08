@@ -22,10 +22,10 @@ def get_success_url(request):
 
 
 
-def employee_registration(request):
+def freelancer_registration(request):
 
     """
-    Handle Employee Registration
+    Handle Freelancer Registration
 
     """
     form = EmployeeRegistrationForm(request.POST or None)
@@ -40,10 +40,10 @@ def employee_registration(request):
     return render(request,'account/employee-registration.html',context)
 
 
-def employer_registration(request):
+def taskowner_registration(request):
 
     """
-    Handle Employee Registration 
+    Handle Task Owner Registration 
 
     """
 

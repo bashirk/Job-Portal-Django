@@ -10,11 +10,18 @@ class EmployeeRegistrationForm(UserCreationForm):
 
     def __init__(self, *args, **kwargs):
         UserCreationForm.__init__(self, *args, **kwargs)
-        self.fields['gender'].required = True
+        self.fields['gender'].required = True        
         self.fields['first_name'].label = "First Name :"
         self.fields['last_name'].label = "Last Name :"
+
         self.fields['password1'].label = "Password :"
+        self.fields['password1'].help_text = 'Password must contain at least 8 characters.'
         self.fields['password2'].label = "Confirm Password :"
+        self.fields['password2'].help_text = 'Enter the same password as before, for verification.'
+        
+        self.fields['emp_salary'].label = "Rate (per task) :"
+        self.fields['emp_salary'].help_text = 'Set your rate per each task you fulfill in Naira'
+
         self.fields['email'].label = "Email :"
         self.fields['gender'].label = "Gender :"
 
@@ -43,12 +50,17 @@ class EmployeeRegistrationForm(UserCreationForm):
                 'placeholder': 'Confirm Password',
             }
         )
+        self.fields['emp_salary'].widget.attrs.update(
+            {
+                'placeholder': 'Enter Your Rate',
+            }
+        )
 
     class Meta:
 
         model=User
 
-        fields = ['first_name', 'last_name', 'email', 'password1', 'password2', 'gender']
+        fields = ['first_name', 'last_name', 'email', 'password1', 'password2', 'gender', 'emp_salary']
 
     def clean_gender(self):
         gender = self.cleaned_data.get('gender')
@@ -69,19 +81,21 @@ class EmployerRegistrationForm(UserCreationForm):
         UserCreationForm.__init__(self, *args, **kwargs)
         self.fields['first_name'].required = True
         self.fields['last_name'].required = True
-        self.fields['first_name'].label = "Company Name"
-        self.fields['last_name'].label = "Company Address"
-        self.fields['password1'].label = "Password"
-        self.fields['password2'].label = "Confirm Password"
+        self.fields['first_name'].label = "Business Name"
+        self.fields['last_name'].label = "Your Address"
+        self.fields['password1'].label = "Password :"
+        self.fields['password1'].help_text = 'NOTE: The password MUST not be too similar to neither your first name nor your email. And must be 8 or more characters'
+        self.fields['password2'].label = "Confirm Password :"
+        self.fields['password2'].help_text = 'Enter the same password as before, for verification.'
 
         self.fields['first_name'].widget.attrs.update(
             {
-                'placeholder': 'Enter Company Name',
+                'placeholder': 'Enter Business Name',
             }
         )
         self.fields['last_name'].widget.attrs.update(
             {
-                'placeholder': 'Enter Company Address',
+                'placeholder': 'Enter Your Address',
             }
         )
         self.fields['email'].widget.attrs.update(
@@ -135,7 +149,7 @@ class UserLoginForm(forms.Form):
                 raise forms.ValidationError("User Does Not Exist.")
 
             if not user.check_password(password):
-                raise forms.ValidationError("Password Does not Match.")
+                raise forms.ValidationError("Passwords Do not Match.")
 
             if not user.is_active:
                 raise forms.ValidationError("User is not Active.")
@@ -161,7 +175,12 @@ class EmployeeProfileEditForm(forms.ModelForm):
                 'placeholder': 'Enter Last Name',
             }
         )
+        self.fields['emp_salary'].widget.attrs.update(
+            {
+                'placeholder': 'Enter Your New Rate Per Task',
+            }
+        )
 
     class Meta:
         model = User
-        fields = ["first_name", "last_name", "gender"]
+        fields = ["first_name", "last_name", "gender", "emp_salary"]

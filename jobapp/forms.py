@@ -6,6 +6,8 @@ from django.contrib import auth
 from jobapp.models import *
 from ckeditor.widgets import CKEditorWidget
 
+from account.models import User
+
 
     
 
@@ -13,29 +15,29 @@ class JobForm(forms.ModelForm):
     
     def __init__(self, *args, **kwargs):
         forms.ModelForm.__init__(self, *args, **kwargs)
-        self.fields['title'].label = "Job Title :"
-        self.fields['location'].label = "Job Location :"
-        self.fields['salary'].label = "Salary :"
-        self.fields['description'].label = "Job Description :"
+        self.fields['title'].label = "Task Title :"
+        self.fields['location'].label = "Task Location :"
+        self.fields['salary'].label = "Amount(NGN) :"
+        self.fields['description'].label = "Task Description :"
         self.fields['tags'].label = "Tags :"
-        self.fields['last_date'].label = "Submission Deadline :"
-        self.fields['company_name'].label = "Company Name :"
+        self.fields['last_date'].label = "Task Deadline :"
+        self.fields['company_name'].label = "Business Name :"
         self.fields['url'].label = "Website :"
 
 
         self.fields['title'].widget.attrs.update(
             {
-                'placeholder': 'eg : Software Developer',
+                'placeholder': 'eg: Design logo for a logistics company',
             }
         )        
         self.fields['location'].widget.attrs.update(
             {
-                'placeholder': 'eg : Bangladesh',
+                'placeholder': 'eg: Lagos',
             }
         )
         self.fields['salary'].widget.attrs.update(
             {
-                'placeholder': '$800 - $1200',
+                'placeholder': 'NGN800 - NGN12000',
             }
         )
         self.fields['tags'].widget.attrs.update(
@@ -58,7 +60,7 @@ class JobForm(forms.ModelForm):
             {
                 'placeholder': 'https://example.com',
             }
-        )    
+        )
 
 
     class Meta:
@@ -82,14 +84,16 @@ class JobForm(forms.ModelForm):
         job_type = self.cleaned_data.get('job_type')
 
         if not job_type:
-            raise forms.ValidationError("Service is required")
+            pass
+            # raise forms.ValidationError("Skill Level is required")
         return job_type
 
     def clean_category(self):
         category = self.cleaned_data.get('category')
 
         if not category:
-            raise forms.ValidationError("category is required")
+            pass
+            # raise forms.ValidationError("category is required")
         return category
 
 
@@ -114,18 +118,17 @@ class JobBookmarkForm(forms.ModelForm):
 
 
 
-
 class JobEditForm(forms.ModelForm):
     
     def __init__(self, *args, **kwargs):
         forms.ModelForm.__init__(self, *args, **kwargs)
-        self.fields['title'].label = "Job Title :"
-        self.fields['location'].label = "Job Location :"
-        self.fields['salary'].label = "Salary :"
-        self.fields['description'].label = "Job Description :"
+        self.fields['title'].label = "Task Title :"
+        self.fields['location'].label = "Task Location :"
+        self.fields['salary'].label = "Amount(NGN) :"
+        self.fields['description'].label = "Task Description :"
         # self.fields['tags'].label = "Tags :"
-        self.fields['last_date'].label = "Dead Line :"
-        self.fields['company_name'].label = "Company Name :"
+        self.fields['last_date'].label = "Task Deadline :"
+        self.fields['company_name'].label = "Business Name :"
         self.fields['url'].label = "Website :"
 
 
@@ -136,12 +139,12 @@ class JobEditForm(forms.ModelForm):
         )        
         self.fields['location'].widget.attrs.update(
             {
-                'placeholder': 'eg : Bangladesh',
+                'placeholder': 'eg : Lagos',
             }
         )
         self.fields['salary'].widget.attrs.update(
             {
-                'placeholder': '$800 - $1200',
+                'placeholder': 'NGN800 - NGN120O0',
             }
         )
         # self.fields['tags'].widget.attrs.update(
@@ -191,14 +194,16 @@ class JobEditForm(forms.ModelForm):
         job_type = self.cleaned_data.get('job_type')
 
         if not job_type:
-            raise forms.ValidationError("Service is required")
+            pass
+            # raise forms.ValidationError("Skill Level is required")
         return job_type
 
     def clean_category(self):
         category = self.cleaned_data.get('category')
 
         if not category:
-            raise forms.ValidationError("category is required")
+            pass
+            # raise forms.ValidationError("category is required")
         return category
 
 
@@ -208,3 +213,8 @@ class JobEditForm(forms.ModelForm):
             user.save()
         return job
 
+# Paystack CustomerInfo for payment
+class CustomerInfoForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'email', 'phone_number', 'address']

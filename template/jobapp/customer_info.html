@@ -1,0 +1,171 @@
+{% extends 'base.html' %}
+{% load static %} 
+{% block content %}
+
+
+
+    <!-- HOME -->
+    <section class="section-hero overlay inner-page bg-image" style="background-image: url('{% static 'images/hero_1.jpg' %}');" id="home-section">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-7">
+            <h1 class="text-white font-weight-bold">{{ applicant.get_first_name }}</h1>
+            <div class="custom-breadcrumbs">
+              <a href="{% url 'jobapp:home' %}">Home</a> <span class="mx-2 slash">/</span>
+              <span class="text-white"><strong>Confirm Payment Info</strong></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="site-section block__18514" id="next-section">
+      <div class="container">
+                
+            <div class="col-lg-3 mr-auto">
+              <!-- 
+              <div class="border p-4 rounded">
+                
+                <ul class="list-unstyled block__47528 mb-0">
+                  <li><span class="active">Graphic Design</span></li>
+                  <li><a href="#">Topic 1</a></li>
+                  <li><a href="#">Topic 2</a></li>
+                </ul>
+                  
+
+              </div>
+
+            -->
+            </div>
+
+            <div class="row align-items-center mb-5">
+                <div class="col-lg-12 mb-4 mb-lg-0">
+                    <div class="text-center">
+                      <h2>Payment Information</h2>
+                    </div>
+                    {% include 'messages.html' %}
+                </div>
+            </div>
+
+            <form id="paymentForm" action='jobapp:customer-info'  method="POST" enctype="multipart/form-data"></form>
+                
+              <div class="row mb-5 p-4 p-md-5 border rounded">
+                <div class="col-lg-12">
+                    <h3 class="text-black mb-5 border-bottom pb-2">DETAILS</h3>
+                    
+
+                        
+
+                        <!-- <span class="text-primary d-block mb-5"><span class="icon-magnet display-2"></span></span>-->
+                        <h2 class="mb-4">
+
+                          <div class="form-group">
+
+                            <h5 class="mb-4">
+                              <label for="email">Change your email for payment receipt by editing your current email below:</label>
+                            </h5>
+                            <input type="email" id="email-address" value='{{ user }}' required />
+                        
+                          </div>
+
+                          <div class="form-group">
+                            <h5 class="mb-4">
+                              <label for="amount" >{{ applicant.first_name }}'s rate is NGN{{ applicant.get_emp_salary_total }}</label>
+                            </h5>
+                            <input type="tel" id="amount" value='{{ applicant.get_emp_salary_total }}' required readonly/>
+                            
+                          </div>
+                        
+                        </h2>
+
+
+                          
+                      
+                </div>
+              </div>
+
+              <div class="row align-items-center mb-5">
+                <div class="col-lg-4 ml-auto">
+                  <div class="row">
+                    <div class="col-6">
+                       <div class="form-submit">
+                        
+                            <button class="btn btn-block btn-primary btn-md" type="submit" onclick="payWithPaystack()"> Make Payment </button>
+                            
+                        </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+      </div>
+    </section>
+
+<script src="https://js.paystack.co/v1/inline.js"></script> 
+
+<!-- Paystack payment script; scripts.html; Line 274 -->
+
+<script>
+
+          const paymentForm = document.getElementById('paymentForm');
+
+          const publicKey = '{{ key }}';
+
+          paymentForm.addEventListener("submit", payWithPaystack, false);
+
+          function payWithPaystack() {
+
+          //e.preventDefault();
+
+          let handler = PaystackPop.setup({
+
+              key: publicKey, // Replace with your public key
+              
+              email: document.getElementById("email-address").value,
+
+              amount: document.getElementById("amount").value * 100,
+              
+              ref: ''+Math.floor((Math.random() * 1000000000) + 1), // generates a pseudo-unique reference. Please replace with a reference you generated. Or remove the line entirely so our API will generate one for you
+
+              // label: "Optional string that replaces customer email"
+
+              onClose: function(){
+
+              //alert('Window closed.');
+
+              },
+
+              callback: function(response){
+
+              let message = 'Payment complete! Reference: ' + response.reference;
+
+              console.log(message);
+
+
+              var txref = response.reference;
+              console.log("This is the response returned after a charge", response);
+              if (
+                  response.tx.chargeResponseCode == "200" ||
+                  response.tx.chargeResponseCode == "0" || response.status == 'success'
+              ) {
+                  document.location.href = "{% url 'jobapp:dashboard' %}"
+                      // redirect to a success page
+              } else {
+                  document.location.href = "{% url 'jobapp:dashboard' %}"
+              }
+
+
+              x.close();
+
+              }
+
+          });
+
+          handler.openIframe();
+
+          }
+
+</script>
+
+{% endblock %}

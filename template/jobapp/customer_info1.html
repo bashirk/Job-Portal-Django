@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+{% load static %} 
+{% block content %}
+
+
+
+    <!-- HOME -->
+    <section class="section-hero overlay inner-page bg-image" style="background-image: url('{% static 'images/hero_1.jpg' %}');" id="home-section">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-7">
+            <h1 class="text-white font-weight-bold">{{ applicant.get_first_name }}</h1>
+            <div class="custom-breadcrumbs">
+              <a href="{% url 'jobapp:home' %}">Home</a> <span class="mx-2 slash">/</span>
+              <span class="text-white"><strong>Confirm Payment Info</strong></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="site-section block__18514" id="next-section">
+      <div class="container">
+        <div class="row">
+       
+          <div class="col-lg-3 mr-auto">
+               <!--  
+            <div class="border p-4 rounded">
+              
+              <ul class="list-unstyled block__47528 mb-0">
+                <li><span class="active">Graphic Design</span></li>
+                <li><a href="#">Topic 1</a></li>
+                <li><a href="#">Topic 2</a></li>
+               </ul>
+                
+
+            </div>
+             -->
+
+          </div>
+          
+
+          <div class="col-lg-8">
+            <span class="text-primary d-block mb-5"><span class="icon-magnet display-1"></span></span>
+            <h2 class="mb-4">{{ applicant.get_full_name }}</h2>
+                <form id="paymentForm" action='jobapp:customer-info' method='post'>
+      
+                    <div class="form-group">
+
+                      <label for="email">Email Address</label>
+                  
+                      <input type="email" id="email-address" required />
+                  
+                    </div>
+                  
+                    <div class="form-group">
+                  
+                      <label for="amount">Amount</label>
+                  
+                      <input type="tel" id="amount" required />
+                  
+                    </div>
+                  
+                    <div class="form-group">
+                  
+                      <label for="first-name">{{ applicant.get_first_name }}</label>
+                  
+                      <input type="text" id="first-name" value="{{ applicant.first_name }}"/>
+                  
+                    </div>
+                  
+                    <div class="form-group">
+                  
+                      <label for="last-name">Last Name</label>
+                  
+                      <input type="text" id="last-name" />
+                  
+                    </div>
+                                         
+                    <div class="form-submit">
+                        
+                        <button type="submit" onclick="payWithPaystack()"> Pay with PayStack </button>
+                        
+                    </div>
+                </form>
+            
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+<script src="https://js.paystack.co/v1/inline.js"></script> 
+
+<!-- Paystack payment script; scripts.html; Line 274 -->
+
+
+
+
+{% endblock %}
+
+

@@ -26,7 +26,7 @@ SECRET_KEY = 'etdq)uvq=t0rc&ams5_ovn6w8bcwknjj0u97*(#n^(76x*+dr1'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['djobportal.herokuapp.com']
+ALLOWED_HOSTS = ['workingsng.herokuapp.com']
 
 
 # Application definition
@@ -46,7 +46,11 @@ INSTALLED_APPS = [
     'ckeditor',
     'taggit',
     'user_visit',
+    #'paystack',
 ]
+
+PAYSTACK_PUBLIC_KEY = 'pk_test_a47f9741bff4b70ceea52d5741ba90b611742300' # paystack public key
+#PAYSTACK_SECRET_KEY = 'sk_test_872f24873da67579f97a5795341511491300b96a' # paystack secret key
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -87,10 +91,10 @@ WSGI_APPLICATION = 'job.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'jobportal',
+        'NAME': 'workings',
         'USER': 'postgres',
-        'PASSWORD': '1234',
-        'HOST': 'localhost',
+        'PASSWORD': 'postgres',
+        'HOST': '127.0.0.1',
         'PORT': '',
     }
 }
