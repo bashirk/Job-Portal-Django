@@ -158,8 +158,8 @@
                   document.location.href = "{% url 'jobapp:dashboard' %}"
                       // redirect to a success page
               } else {
-                  alert("failure!")
-                  document.location.href = "{% url 'jobapp:dashboard' %}"
+                  alert("Payment failed!")
+                  document.location.href = "{% url 'jobapp:customer-info' applicant.id %}"
               }
 
 
