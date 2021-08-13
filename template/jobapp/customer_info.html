@@ -59,6 +59,10 @@
                         <!-- <span class="text-primary d-block mb-5"><span class="icon-magnet display-2"></span></span>-->
                         <h2 class="mb-4">
 
+                            <h5 class="mb-4">
+                                <label for="email">NOTE: After making payment, an email with your payment reference number will be generated, and it is to be sent as a confirmation of your request. Regards!</label>
+                            </h5>
+
                           <div class="form-group">
 
                             <h5 class="mb-4">
@@ -143,15 +147,18 @@
               console.log(message);
 
 
-              var txref = response.reference;
+              var txref = response.trxref;
               console.log("This is the response returned after a charge", response);
               if (
-                  response.tx.chargeResponseCode == "200" ||
-                  response.tx.chargeResponseCode == "0" || response.status == 'success'
+
+                  response.status == "success" && response.message == "Approved"
+                  //response.tx.chargeResponseCode == "200" || response.tx.chargeResponseCode == "0" || response.status == 'success'
               ) {
+                  document.location.href = "mailto:orders@workingsng.com?subject= I Hereby Request The Service Of {{ applicant.get_full_name }} &body=I have already made my payment for the task, with reference%20number:%20" + response.reference
                   document.location.href = "{% url 'jobapp:dashboard' %}"
                       // redirect to a success page
               } else {
+                  alert("failure!")
                   document.location.href = "{% url 'jobapp:dashboard' %}"
               }
 
